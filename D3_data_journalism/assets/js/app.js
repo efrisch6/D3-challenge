@@ -24,14 +24,14 @@ var chartGroup = svg.append("g")
 
 
 d3.csv("assets/data/data.csv").then(function(stateData) {
-    console.log("hello")
-    console.log(stateData);
+    console.log("hello");
+    // console.log(stateData);
     
     stateData.forEach(data => {
         data.poverty = +data.poverty;
-        data.healthcare = +data.healthcare
-    })
-    console.log(stateData)
+        data.healthcare = +data.healthcare;
+    });
+    // console.log(stateData)
 
     var xLinearScale = d3.scaleLinear()
       .domain([0,d3.max(stateData, d => d.poverty)])
@@ -51,7 +51,8 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
     chartGroup.append("g")
       .call(leftAxis);
 
-    var circlesGroup = chartGroup.selectAll("circle")
+    var circlesGroup = 
+    chartGroup.selectAll("circle")
       .data(stateData)
       .enter()
       .append("circle")
@@ -59,19 +60,23 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
       .attr("cy", d => yLinearScale(d.healthcare))
       .attr("r", "15")
       .attr("fill", "lightblue")
-      .attr("opacity", "1").text(d => d.abbr)
+      .attr("opacity", "1").text(d => d.abbr).exit()
       ;
 
-    chartGroup.selectAll("text")
+    
+
+    chartGroup.selectAll("text.states")
       .data(stateData)
       .enter()
       .append("text")
+      .classed("states", true)
       .attr("dx", d => xLinearScale(d.poverty))
       .attr("dy", d => yLinearScale(d.healthcare)+4)
       .style("text-anchor","middle")
       .attr("fill", "white")
-      .text(d => d.abbr).exit();
-      
+      .text(d=> d.abbr).exit();
+    
+      stateData.forEach(d=>console.log(`${d.abbr} - ${d.poverty} - ${d.healthcare}`));
 
     chartGroup.append("text")
       .attr("transform","rotate(-90)")
@@ -89,4 +94,4 @@ d3.csv("assets/data/data.csv").then(function(stateData) {
       .text("In Poverty (%)");
 
 
-})
+});
